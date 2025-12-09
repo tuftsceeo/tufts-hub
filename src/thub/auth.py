@@ -10,6 +10,7 @@ from typing import Any, Optional
 
 import jwt
 from fastapi import Cookie, Depends, HTTPException, Request, status
+from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from thub.config import load_config, save_config
@@ -112,19 +113,27 @@ async def get_current_user(
         token = authorization.credentials
 
     if not token:
-        # Redirect to login page.
+        # Redirect to login page, preserving original path.
+        original_path = str(request.url.path)
+        if request.url.query:
+            original_path += f"?{request.url.query}"
+
         raise HTTPException(
             status_code=status.HTTP_303_SEE_OTHER,
-            headers={"Location": "/login"},
+            headers={"Location": f"/login?next={original_path}"},
         )
 
     username = verify_jwt_token(token, config)
 
     if not username:
-        # Redirect to login page.
+        # Redirect to login page, preserving original path.
+        original_path = str(request.url.path)
+        if request.url.query:
+            original_path += f"?{request.url.query}"
+
         raise HTTPException(
             status_code=status.HTTP_303_SEE_OTHER,
-            headers={"Location": "/login"},
+            headers={"Location": f"/login?next={original_path}"},
         )
 
     return username

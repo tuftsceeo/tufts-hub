@@ -12,6 +12,7 @@ from fastapi import (
     Request,
     WebSocket,
     WebSocketDisconnect,
+    status,
 )
 from fastapi.responses import HTMLResponse, Response
 
@@ -74,16 +75,18 @@ async def serve_static(filename: str):
 
 
 @app.get("/login", response_class=HTMLResponse)
-async def login_form():
+async def login_form(next: str = "/"):
     """
-    Display login form.
+    Display login form with optional redirect destination.
     """
     template = load_template("login.html")
-    return template.format(error="")
+    return template.format(error="", next=next)
 
 
 @app.post("/login", response_class=HTMLResponse)
-async def login(username: str = Form(...), password: str = Form(...)):
+async def login(
+    username: str = Form(...), password: str = Form(...), next: str = Form("/")
+):
     """
     Process login and return JWT token.
     """
@@ -92,7 +95,8 @@ async def login(username: str = Form(...), password: str = Form(...)):
     if not verify_password(username, password, config):
         template = load_template("login.html")
         return template.format(
-            error='<p class="error">Invalid username or password</p>'
+            error='<p class="error">Invalid username or password</p>',
+            next=next,
         )
 
     log_auth_success(username)
@@ -100,7 +104,9 @@ async def login(username: str = Form(...), password: str = Form(...)):
     token = create_jwt_token(username, config)
 
     template = load_template("success.html")
-    response = HTMLResponse(template.format(username=username, token=token))
+    response = HTMLResponse(
+        template.format(username=username, token=token, next=next)
+    )
 
     # Set session cookie.
     response.set_cookie(
@@ -111,6 +117,17 @@ async def login(username: str = Form(...), password: str = Form(...)):
         samesite="lax",
     )
 
+    return response
+
+
+@app.get("/logout")
+async def logout():
+    """
+    Clear session cookie and redirect to login page.
+    """
+    response = Response(status_code=status.HTTP_303_SEE_OTHER)
+    response.delete_cookie(key="session")
+    response.headers["Location"] = "/login"
     return response
 
 
@@ -178,8 +195,15 @@ async def serve_static_files(
     if not file_path.exists() or not file_path.is_file():
         return Response(status_code=404)
 
-    # Serve the file.
-    return FileResponse(file_path)
+    # Serve the file with no-cache headers to prevent stale content.
+    return FileResponse(
+        file_path,
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
 
 
 @app.websocket("/channel/{channel_name}")

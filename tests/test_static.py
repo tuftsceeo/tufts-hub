@@ -311,6 +311,48 @@ def test_serve_static_requires_authentication(tmp_path, monkeypatch):
 
     response = client.get("/test.html", follow_redirects=False)
 
-    # Should redirect to login.
+    # Should redirect to login with next parameter.
     assert response.status_code == 303
-    assert response.headers["location"] == "/login"
+    assert response.headers["location"] == "/login?next=/test.html"
+
+
+def test_static_files_have_no_cache_headers(tmp_path, monkeypatch):
+    """
+    Static files are served with no-cache headers to prevent stale content.
+    """
+    config_path = tmp_path / "config.json"
+    monkeypatch.chdir(tmp_path)
+
+    config = {
+        "users": {
+            "testuser": {
+                "password_hash": "somehash",
+                "salt": "somesalt",
+            }
+        },
+        "proxies": {},
+        "jwt": {"secret": "test_secret", "expiry_hours": 24},
+    }
+
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f)
+
+    # Create a test file.
+    test_file = tmp_path / "test.html"
+    test_file.write_text("<h1>Hello World</h1>", encoding="utf-8")
+
+    # Create a valid JWT token.
+    from thub.auth import create_jwt_token
+
+    token = create_jwt_token("testuser", config)
+
+    client = TestClient(app)
+
+    response = client.get("/test.html", cookies={"session": token})
+
+    assert response.status_code == 200
+    # Check for no-cache headers.
+    assert "cache-control" in response.headers
+    assert "no-cache" in response.headers["cache-control"]
+    assert "no-store" in response.headers["cache-control"]
+    assert "must-revalidate" in response.headers["cache-control"]

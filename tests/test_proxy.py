@@ -290,9 +290,11 @@ def test_proxy_endpoint_requires_authentication(proxy_config):
 
     response = client.get("/proxy/testapi/endpoint", follow_redirects=False)
 
-    # Should redirect to login.
+    # Should redirect to login with next parameter.
     assert response.status_code == 303
-    assert response.headers["location"] == "/login"
+    assert (
+        response.headers["location"] == "/login?next=/proxy/testapi/endpoint"
+    )
 
 
 def test_proxy_endpoint_get_request(proxy_config):

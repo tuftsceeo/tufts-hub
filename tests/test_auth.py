@@ -11,7 +11,9 @@ from unittest.mock import MagicMock, patch
 import jwt
 import pytest
 from fastapi import HTTPException
+from fastapi.testclient import TestClient
 
+from thub.app import app
 from thub.auth import (
     create_jwt_token,
     ensure_jwt_secret,
@@ -362,6 +364,8 @@ async def test_get_current_user_redirects_without_token(tmp_path, monkeypatch):
         json.dump(config, f)
 
     mock_request = MagicMock()
+    mock_request.url.path = "/examples/test"
+    mock_request.url.query = ""
 
     with pytest.raises(HTTPException) as exc_info:
         await get_current_user(
@@ -371,7 +375,7 @@ async def test_get_current_user_redirects_without_token(tmp_path, monkeypatch):
         )
 
     assert exc_info.value.status_code == 303
-    assert exc_info.value.headers["Location"] == "/login"
+    assert exc_info.value.headers["Location"] == "/login?next=/examples/test"
 
 
 @pytest.mark.asyncio
@@ -394,6 +398,8 @@ async def test_get_current_user_redirects_with_invalid_token(
         json.dump(config, f)
 
     mock_request = MagicMock()
+    mock_request.url.path = "/secure/page"
+    mock_request.url.query = ""
 
     with pytest.raises(HTTPException) as exc_info:
         await get_current_user(
@@ -401,4 +407,100 @@ async def test_get_current_user_redirects_with_invalid_token(
         )
 
     assert exc_info.value.status_code == 303
-    assert exc_info.value.headers["Location"] == "/login"
+    assert exc_info.value.headers["Location"] == "/login?next=/secure/page"
+
+
+def test_logout_clears_cookie_and_redirects(tmp_path, monkeypatch):
+    """
+    Logout endpoint clears session cookie and redirects to login.
+    """
+    config_path = tmp_path / "config.json"
+    monkeypatch.chdir(tmp_path)
+
+    config = {
+        "users": {},
+        "proxies": {},
+        "jwt": {"secret": "test_secret", "expiry_hours": 24},
+    }
+
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f)
+
+    client = TestClient(app)
+
+    response = client.get("/logout", follow_redirects=False)
+
+    assert response.status_code == 303
+    assert response.headers["location"] == "/login"
+    # Check that cookie is deleted (Max-Age=0 means deletion).
+    cookie_header = response.headers.get("set-cookie", "")
+    assert "session=" in cookie_header
+    assert "Max-Age=0" in cookie_header
+
+
+@pytest.mark.asyncio
+async def test_get_current_user_preserves_query_params_without_token(
+    tmp_path, monkeypatch
+):
+    """
+    User authentication preserves query parameters in redirect URL.
+    """
+    config_path = tmp_path / "config.json"
+    monkeypatch.chdir(tmp_path)
+
+    config = {
+        "users": {},
+        "proxies": {},
+        "jwt": {"secret": "test_secret", "expiry_hours": 24},
+    }
+
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f)
+
+    mock_request = MagicMock()
+    mock_request.url.path = "/examples/test"
+    mock_request.url.query = "foo=bar&baz=qux"
+
+    with pytest.raises(HTTPException) as exc_info:
+        await get_current_user(
+            request=mock_request,
+            session_token=None,
+            authorization=None,
+        )
+
+    assert exc_info.value.status_code == 303
+    expected_url = "/login?next=/examples/test?foo=bar&baz=qux"
+    assert exc_info.value.headers["Location"] == expected_url
+
+
+@pytest.mark.asyncio
+async def test_get_current_user_preserves_query_params_with_invalid_token(
+    tmp_path, monkeypatch
+):
+    """
+    Invalid token redirect preserves query parameters.
+    """
+    config_path = tmp_path / "config.json"
+    monkeypatch.chdir(tmp_path)
+
+    config = {
+        "users": {},
+        "proxies": {},
+        "jwt": {"secret": "test_secret", "expiry_hours": 24},
+    }
+
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f)
+
+    mock_request = MagicMock()
+    mock_request.url.path = "/api/data"
+    mock_request.url.query = "id=123&format=json"
+
+    with pytest.raises(HTTPException) as exc_info:
+        await get_current_user(
+            request=mock_request, session_token="invalid_token"
+        )
+
+    assert exc_info.value.status_code == 303
+    expected_url = "/login?next=/api/data?id=123&format=json"
+    assert exc_info.value.headers["Location"] == expected_url

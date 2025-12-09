@@ -326,6 +326,22 @@ section h2 {
   font-weight: bold;
   color: white;
   font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Emoji contrast styling for visibility on all backgrounds. */
+.type-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  background: rgba(255, 255, 255, 0.8);  /* Increased from 0.3 to 0.8. */
+  border-radius: 50%;
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 /* All 18 Pokemon types with good contrast. */
