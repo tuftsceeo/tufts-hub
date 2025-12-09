@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/thub"]
+
+[tool.hatch.version]
+path = "src/thub/__init__.py"
+
+[project]
+dynamic = ["version"]
+name = "thub"
+authors = [
+  {name = "Nicholas H.Tollervey", email = "ntoll@ntoll.org"}
+]
+maintainers = [
+  {name = "Nicholas H.Tollervey", email = "ntoll@ntoll.org"}
+]
+description = "Simple self-hosting of PyScript apps and infrastructure."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E.*"]
+dependencies = [
+  "fastapi==0.123.3",
+  "uvicorn[standard]==0.38.0",
+  "httpx==0.28.1",
+  "structlog==25.5.0",
+  "rich==14.2.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "black==25.1.0",
+  "build==1.2.2.post1",
+  "hatch==1.14.1",
+  "pytest==9.0.1",
+  "pytest-asyncio==1.3.0",
+  "pytest-cov==6.2.1",
+  "twine==6.1.0"
+]
