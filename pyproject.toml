@@ -5,6 +5,12 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/thub"]
 
+[tool.hatch.build]
+include = [
+  "src/thub/**/*.py",
+  "src/thub/static_assets/**/*"
+]
+
 [tool.hatch.version]
 path = "src/thub/__init__.py"
 
@@ -28,7 +34,8 @@ dependencies = [
   "structlog==25.5.0",
   "rich==14.2.0",
   "pyjwt==2.10.1",
-  "websockets==15.0.1"
+  "websockets==14.1",
+  "python-multipart==0.0.20"
 ]
 
 [project.scripts]

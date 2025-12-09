@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login - Tufts Hub</title>
+    <link rel="stylesheet" href="/static/auth.css">
+  </head>
+  <body class="login">
+    <form method="post">
+      <h1>Login to Tufts Hub</h1>
+      {error}
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required autofocus />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+      <button type="submit">Login</button>
+    </form>
+  </body>
+</html>

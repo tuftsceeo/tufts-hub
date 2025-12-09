@@ -1,0 +1,127 @@
+/* Reset and base styles. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Root variables for theming. */
+:root {
+  --background: #ffffff;
+  --text: #222222;
+  --border: #cccccc;
+  --error: #d32f2f;
+  --success: #388e3c;
+  --button-bg: #1976d2;
+  --button-text: #ffffff;
+}
+
+/* Dark mode detection. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a1a1a;
+    --text: #e0e0e0;
+    --border: #444444;
+    --error: #ef5350;
+    --success: #66bb6a;
+    --button-bg: #42a5f5;
+    --button-text: #000000;
+  }
+}
+
+/* Base typography and layout. */
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 1rem;
+}
+
+/* Login form styles. */
+body.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+form {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+h1.success {
+  color: var(--success);
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--background);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.error {
+  color: var(--error);
+  margin-bottom: 1rem;
+}
+
+/* Success page styles. */
+body.success {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+pre {
+  background-color: var(--border);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}

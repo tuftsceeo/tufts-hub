@@ -17,7 +17,11 @@ def test_load_config_creates_default_structure_when_missing(tmp_path):
     config_path = tmp_path / "config.json"
     config = load_config(config_path)
 
-    assert config == {"users": {}, "proxies": {}}
+    assert config == {
+        "users": {},
+        "proxies": {},
+        "jwt": {"secret": None, "expiry_hours": 24},
+    }
 
 
 def test_load_config_reads_existing_file(tmp_path):
@@ -28,6 +32,7 @@ def test_load_config_reads_existing_file(tmp_path):
     expected = {
         "users": {"alice": ["hash", "salt"]},
         "proxies": {"api": {"base_url": "https://example.com"}},
+        "jwt": {"secret": "test_secret", "expiry_hours": 48},
     }
 
     with open(config_path, "w", encoding="utf-8") as f:
@@ -39,7 +44,7 @@ def test_load_config_reads_existing_file(tmp_path):
 
 def test_load_config_adds_missing_keys(tmp_path):
     """
-    Loading config adds missing users and proxies keys.
+    Loading config adds missing users, proxies, and jwt keys.
     """
     config_path = tmp_path / "config.json"
 
@@ -50,8 +55,10 @@ def test_load_config_adds_missing_keys(tmp_path):
 
     assert "users" in config
     assert "proxies" in config
+    assert "jwt" in config
     assert config["users"] == {}
     assert config["proxies"] == {}
+    assert config["jwt"] == {"secret": None, "expiry_hours": 24}
     assert config["other"] == "data"
 
 

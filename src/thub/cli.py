@@ -58,6 +58,11 @@ def serve(args: argparse.Namespace):
         f"[blue]Starting Tufts Hub on {args.host}:{args.port}[/blue]"
     )
 
+    # Configure uvicorn logging to use structlog.
+    log_config = uvicorn.config.LOGGING_CONFIG
+    log_config["formatters"]["default"]["fmt"] = "%(message)s"
+    log_config["formatters"]["access"]["fmt"] = "%(message)s"
+
     uvicorn.run(
         "thub.app:app",
         host=args.host,
@@ -65,6 +70,8 @@ def serve(args: argparse.Namespace):
         reload=args.reload,
         ssl_keyfile=ssl_keyfile,
         ssl_certfile=ssl_certfile,
+        log_config=log_config,
+        access_log=False,
     )
 
 
@@ -109,6 +116,9 @@ def new(args: argparse.Namespace):
     """
     Create a new skeleton PyScript project.
     """
+    # Path to static assets directory.
+    static_dir = Path(__file__).parent / "static_assets"
+
     # Determine PyScript version.
     if args.version:
         version = args.version
@@ -145,88 +155,19 @@ def new(args: argparse.Namespace):
     settings_json = project_path / "settings.json"
     settings_json.write_text("{}\n", encoding="utf-8")
 
-    # Create index.html.
+    # Create index.html from template.
     index_html = project_path / "index.html"
-    html_content = f"""<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>{args.project_name}</title>
-    <link rel="stylesheet" href="https://pyscript.net/releases/{version}/core.css">
-    <script type="module" src="https://pyscript.net/releases/{version}/core.js"></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <script type="mpy" src="./main.py" config="./settings.json" terminal></script>
-  </body>
-</html>
-"""
+    template = (static_dir / "skeleton_index.html").read_text(encoding="utf-8")
+    html_content = template.format(
+        project_name=args.project_name, version=version
+    )
     index_html.write_text(html_content, encoding="utf-8")
 
-    # Create style.css.
+    # Create style.css from template.
     style_css = project_path / "style.css"
-    css_content = """/* Reset and base styles. */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Root variables for theming. */
-:root {
-  --background-colour: #ffffff;
-  --text-colour: #222222;
-  --border-colour: #cccccc;
-  --padding: 1rem;
-}
-
-/* Dark mode detection. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-colour: #1a1a1a;
-    --text-colour: #e0e0e0;
-    --border-colour: #444444;
-  }
-}
-
-/* Base typography and layout. */
-body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background-color: var(--background-colour);
-  color: var(--text-colour);
-  line-height: 1.6;
-  padding: var(--padding);
-  min-height: 100vh;
-}
-
-/* Responsive container. */
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Responsive breakpoints. */
-@media (max-width: 768px) {
-  :root {
-    --padding: 0.75rem;
-  }
-  
-  body {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --padding: 0.5rem;
-  }
-  
-  body {
-    font-size: 0.85rem;
-  }
-}
-"""
+    css_content = (static_dir / "skeleton_style.css").read_text(
+        encoding="utf-8"
+    )
     style_css.write_text(css_content, encoding="utf-8")
 
     console.print(

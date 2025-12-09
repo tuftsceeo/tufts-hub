@@ -1,0 +1,60 @@
+/* Reset and base styles. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Root variables for theming. */
+:root {
+  --background-colour: #ffffff;
+  --text-colour: #222222;
+  --border-colour: #cccccc;
+  --padding: 1rem;
+}
+
+/* Dark mode detection. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-colour: #1a1a1a;
+    --text-colour: #e0e0e0;
+    --border-colour: #444444;
+  }
+}
+
+/* Base typography and layout. */
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--background-colour);
+  color: var(--text-colour);
+  line-height: 1.6;
+  padding: var(--padding);
+  min-height: 100vh;
+}
+
+/* Responsive container. */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Responsive breakpoints. */
+@media (max-width: 768px) {
+  :root {
+    --padding: 0.75rem;
+  }
+  
+  body {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --padding: 0.5rem;
+  }
+  
+  body {
+    font-size: 0.85rem;
+  }
+}
