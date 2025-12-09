@@ -89,7 +89,7 @@ The certificate is at "./example.com+5.pem" and the key at "./example.com+5-key.
 thub adduser username password
 ```
 
-Adds creates a user for the app with the given `username` and `password`.
+Adds a user for the app with the given `username` and `password`.
 These credentials are stored in the local `config.json` file (if it doesn't
 already exist, one will be created for you). The password is never shared,
 but immediately hashed using sha256 and a salt.
@@ -104,7 +104,7 @@ the `/login` endpoint to do so.
 thub deluser username
 ```
 
-Removes the user with the given `username`. Under the hood, the user's entry
+Deletes the user with the given `username`. Under the hood, the user's entry
 in `config.json` is removed and the configuration is saved. If no such user
 exists, the command has no side-effects.
 
