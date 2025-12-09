@@ -11,9 +11,7 @@ Most of the functionality is exposed via the `thub` command line tool:
 * Create skeleton PyScript projects.
 
 Configuration is via a `config.json` file in the root directory of your
-project. Here's an example with both user and API proxy configuration
-(⚠️ **DO NOT EDIT USER INFO DIRECTLY** - use the command line tool for
-this; only edit the `proxies` section as required):
+project. Here's an example with both user and API proxy configuration:
 
 ```json
 {
@@ -31,6 +29,9 @@ this; only edit the `proxies` section as required):
   }
 }
 ```
+
+⚠️ **DO NOT EDIT USER INFO DIRECTLY**⚠️ - use the command line tool for
+this; only edit the `proxies` section as required.
 
 ## CLI commands
 
@@ -50,6 +51,32 @@ underlying `uvcorn` server that actually serves the application. They allow
 you to specify the hostname and port for the app, and signal that changes
 within the served directory should cause a reload/refresh of the content
 served.
+
+If a `host` hostname is given, the `thub` command will look for the
+`ssl_keyfile` and `ssl_certfile` in the current directory. If found the app
+will be served using SSL/HTTPS.
+
+To generate a local certificate, ensure the `mkcert` command is installed
+(see: [the project website](https://mkcert.dev/)) and follow this workflow:
+
+```bash
+$ mkcert -install
+Created a new local CA 💥
+The local CA is now installed in the system trust store! ⚡️
+The local CA is now installed in the Firefox trust store (requires browser restart)! 🦊
+
+$ mkcert example.com "*.example.com" example.test localhost 127.0.0.1 ::1
+
+Created a new certificate valid for the following names 📜
+ - "example.com"
+ - "*.example.com"
+ - "example.test"
+ - "localhost"
+ - "127.0.0.1"
+ - "::1"
+
+The certificate is at "./example.com+5.pem" and the key at "./example.com+5-key.pem" ✅
+```
 
 ### Add user
 
@@ -99,6 +126,9 @@ instead.
 
 ## Endpoints
 
+The following endpoints are available once the app is started via the `thub`
+command.
+
 ### Login
 
 ```
@@ -128,6 +158,29 @@ clients. The user must be authenticated for this to work.
 Proxy requests to configured third-party APIs. The proxy adds configured
 headers (like API keys) and removes sensitive headers from responses. The user
 must be authenticated for this to work.
+
+The `{api_name}` should correspond to an entry in the `proxies` section of the
+`config.json` file. The `base_url` for the remote calls should be defined so
+the `{path}` in the local call can be appended to it. You should also define
+any `headers` to use in proxy calls to the remote API (for example, an 
+`Authorization` header containing your API key for the proxied API).
+
+### All other static assets
+
+```
+GET /{path}
+```
+
+Assuming the names of the files and directories in the directory from where the 
+`thub` command was run do not clash with any of the other endpoints (described
+above), then authenticated users can `GET` assets referenced by the `{path}`
+that matches that raw asset on the local filesystem, relative to the current
+directory.
+
+The exceptions to this rule are the following files which are always ignored:
+
+* `config.json`
+* Any `.pem` files (used for serving the site via SSL).
 
 ## Logging
 
