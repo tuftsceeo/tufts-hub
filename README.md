@@ -1,4 +1,4 @@
-# Tufts Hub (`thub`)
+# Tufts PyScript Hub (`thub`)
 
 A simple, self-hosted FastAPI application for PyScript projects. Provides
 WebSocket-based pub/sub channels and HTTP API proxying along with simple
@@ -11,7 +11,8 @@ Most of the functionality is exposed via the `thub` command line tool:
 * Create skeleton PyScript projects.
 
 Configuration is via a `config.json` file in the root directory of your
-project. Here's an example with both user and API proxy configuration:
+project. Here's an example with user, API proxy and API token (JWT)
+configuration:
 
 ```json
 {
@@ -26,6 +27,10 @@ project. Here's an example with both user and API proxy configuration:
         "Content-Type": "application/json"
       }
     }
+  },
+  "jwt": {
+    "secret": "a-very-long-secret",
+    "expiry_hours": 24
   }
 }
 ```
@@ -33,9 +38,9 @@ project. Here's an example with both user and API proxy configuration:
 ⚠️ **DO NOT EDIT USER INFO DIRECTLY**⚠️ - use the command line tool for
 this; only edit the `proxies` section as required.
 
-## CLI commands
+## CLI commands 🖥️
 
-### Start the server
+### Start the server ⚙️
 
 ```bash
 thub serve --host 0.0.0.0 --port 8000 --reload
@@ -78,7 +83,7 @@ Created a new certificate valid for the following names 📜
 The certificate is at "./example.com+5.pem" and the key at "./example.com+5-key.pem" ✅
 ```
 
-### Add user
+### Add user 🧑✅
 
 ```bash
 thub adduser username password
@@ -93,7 +98,7 @@ Once added to the `config.json` the user will be able to access your
 application. If they are not logged in, they are automatically redirected to
 the `/login` endpoint to do so.
 
-### Remove user
+### Remove user 🧑❌
 
 ```bash
 thub deluser username
@@ -103,7 +108,7 @@ Removes the user with the given `username`. Under the hood, the user's entry
 in `config.json` is removed and the configuration is saved. If no such user
 exists, the command has no side-effects.
 
-### Create skeleton PyScript project
+### Create skeleton PyScript project 🦴
 
 ```bash
 thub new project_name --version 2025.11.2
@@ -124,12 +129,12 @@ hit the `https://pyscript.net/version.json` endpoint which serves a string of
 the calver of the current latest version of PyScript. This will be used
 instead.
 
-## Endpoints
+## Endpoints 📡
 
 The following endpoints are available once the app is started via the `thub`
 command.
 
-### Login
+### Login 👋
 
 ```
 {GET/POST} /login
@@ -140,7 +145,7 @@ is authenticated the appropriate session cookie is set and they see details
 of their JWT token (for API connections via PyScript). Otherwise, a username
 and password challenge is always displayed.
 
-### WebSocket Channels
+### WebSocket Channels 💬
 
 ```
 WS /channel/{channel_name}
@@ -149,7 +154,7 @@ WS /channel/{channel_name}
 Connect to a named channel. All messages sent are broadcast to other connected
 clients. The user must be authenticated for this to work.
 
-### API Proxy
+### API Proxy 🥸
 
 ```
 {METHOD} /proxy/{api_name}/{path}
@@ -165,7 +170,7 @@ the `{path}` in the local call can be appended to it. You should also define
 any `headers` to use in proxy calls to the remote API (for example, an 
 `Authorization` header containing your API key for the proxied API).
 
-### All other static assets
+### All other static assets 🌐
 
 ```
 GET /{path}
@@ -182,7 +187,7 @@ The exceptions to this rule are the following files which are always ignored:
 * `config.json`
 * Any `.pem` files (used for serving the site via SSL).
 
-## Logging
+## Logging 📜
 
 Tufts Hub uses structured JSON logging to stdout following
 [12-factor app](https://12factor.net/) principles. All logs are timestamped and
@@ -208,7 +213,22 @@ Furthermore, the following constraints always apply to logs:
 * WebSocket message content is never logged (only connect/disconnect events).
 * Usernames are logged for audit purposes.
 
-## Developer setup
+## Examples 🔬
+
+The `/examples` directory contains example applications demonstrating how to
+use Tufts Hub features with PyScript. **DO NOT USE THESE IN PRODUCTION.**
+
+They are:
+
+* `channels` - a real-time messaging application that demonstrates WebSocket
+  pub/sub channels.
+* `proxy` - a playful Pokémon card viewer that demonstrates API proxy
+  functionality.
+
+Please see the `README.md` file in the `/examples` directory for more
+information.
+
+## Developer setup 💐
 
 Fork the project, clone the repository, create a virtual environment, then:
 
@@ -219,3 +239,21 @@ pip install -e .[dev]
 Please read `CONTRIBUTING.md` for more details. Each new contribution should
 be in an appropriately named branch of its own. Remember always to rebase with
 `main` before submitting your contribution.
+
+The `Makefile` contains some useful commands for developers, but the only one
+you really need is:
+
+```bash
+$ make check
+```
+
+This cleans the repository of temporary files, tidies the code, and runs the
+complete Pytest based test suite. **Please run this command before submitting
+a pull request**.
+
+## Acknowledgements 🙏
+
+Thank you to Anaconda for supporting the open-source work on PyScript.
+
+Thank you to Tufts for their patience and understanding as a band-aid for
+their PyScript hosting problems was created (i.e. this project).
