@@ -14,7 +14,9 @@ from fastapi import (
     WebSocketDisconnect,
     status,
 )
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, Response
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from thub.auth import (
     create_jwt_token,
@@ -46,6 +48,32 @@ def load_template(filename: str) -> str:
     return template_path.read_text(encoding="utf-8")
 
 
+def return_404() -> HTMLResponse:
+    """
+    Return a playful 404 error page.
+    """
+    template = load_template("404.html")
+    return HTMLResponse(content=template, status_code=404)
+
+
+class COIMiddleware(BaseHTTPMiddleware):
+    """
+    Middleware to add Cross-Origin Isolation headers.
+
+    These headers enable SharedArrayBuffer and other features in browsers.
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        """
+        Add COI headers to all responses.
+        """
+        response = await call_next(request)
+        response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
+        response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
+        return response
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
@@ -58,6 +86,21 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Tufts Hub", lifespan=lifespan)
+
+# Add CORS middleware for cross-origin requests.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Sets Access-Control-Allow-Origin: *.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
+
+# Add Cross-Origin Isolation middleware.
+app.add_middleware(COIMiddleware)
+
+# Add logging middleware.
 app.add_middleware(LoggingMiddleware)
 
 
@@ -166,7 +209,7 @@ async def serve_static_files(
 
     # Security: block sensitive files.
     if path == "config.json" or path.endswith(".pem"):
-        return Response(status_code=404)
+        return return_404()
 
     # Handle root path.
     if not path:
@@ -179,9 +222,9 @@ async def serve_static_files(
     try:
         file_path = file_path.resolve()
         if not str(file_path).startswith(str(Path.cwd().resolve())):
-            return Response(status_code=404)
+            return return_404()
     except (ValueError, RuntimeError):
-        return Response(status_code=404)
+        return return_404()
 
     # If path is a directory, try to serve index.html.
     if file_path.is_dir():
@@ -189,11 +232,11 @@ async def serve_static_files(
         if index_file.exists() and index_file.is_file():
             file_path = index_file
         else:
-            return Response(status_code=404)
+            return return_404()
 
     # Check if file exists.
     if not file_path.exists() or not file_path.is_file():
-        return Response(status_code=404)
+        return return_404()
 
     # Serve the file with no-cache headers to prevent stale content.
     return FileResponse(

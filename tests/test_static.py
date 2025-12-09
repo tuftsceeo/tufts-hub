@@ -356,3 +356,42 @@ def test_static_files_have_no_cache_headers(tmp_path, monkeypatch):
     assert "no-cache" in response.headers["cache-control"]
     assert "no-store" in response.headers["cache-control"]
     assert "must-revalidate" in response.headers["cache-control"]
+
+
+def test_404_page_is_playful(tmp_path, monkeypatch):
+    """
+    404 errors return a playful custom error page.
+    """
+    config_path = tmp_path / "config.json"
+    monkeypatch.chdir(tmp_path)
+
+    config = {
+        "users": {
+            "testuser": {
+                "password_hash": "somehash",
+                "salt": "somesalt",
+            }
+        },
+        "proxies": {},
+        "jwt": {"secret": "test_secret", "expiry_hours": 24},
+    }
+
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f)
+
+    # Create a valid JWT token.
+    from thub.auth import create_jwt_token
+
+    token = create_jwt_token("testuser", config)
+
+    client = TestClient(app)
+
+    # Try to access a non-existent file.
+    response = client.get("/does-not-exist.html", cookies={"session": token})
+
+    assert response.status_code == 404
+    # Check for playful 404 page content.
+    assert "404" in response.text
+    assert "Page Not Found" in response.text
+    assert "hide and seek" in response.text
+    assert "Take Me Home" in response.text

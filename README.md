@@ -228,6 +228,19 @@ They are:
 Please see the `README.md` file in the `/examples` directory for more
 information.
 
+To try these examples on your local machine, follow our developer setup
+instructions (see below) and then, in one of the examples directories, start
+serving the PyScript app like this:
+
+```bash
+$ thub serve
+```
+
+Visit [http://localhost:8000/](http://localhost:8000) to see the app. The
+credentials you should use for logging in are listed in the afore mentioned
+`README.md` in the `/examples` directory (hint: the default username and
+password is, `test` and `password123`).
+
 ## Developer setup 💐
 
 Fork the project, clone the repository, create a virtual environment, then:

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>404 - Page Not Found</title>
+    <link rel="stylesheet" href="/static/auth.css">
+    <style>
+      /* Minimal custom styles for 404 page. */
+      body.error-404 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        text-align: center;
+      }
+      
+      .error-container {
+        max-width: 600px;
+        padding: 2rem;
+      }
+      
+      .error-code {
+        font-size: 8rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        line-height: 1;
+      }
+      
+      .error-emoji {
+        font-size: 4rem;
+        margin: 1rem 0;
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+      
+      .error-message {
+        font-size: 1.5rem;
+        margin: 1rem 0;
+        font-weight: 500;
+      }
+      
+      .error-description {
+        opacity: 0.7;
+        margin: 1rem 0 2rem 0;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body class="error-404">
+    <div class="error-container">
+      <h1 class="error-code">404</h1>
+      <div class="error-emoji">🔍</div>
+      <h2 class="error-message">Oops! Page Not Found</h2>
+      <p class="error-description">
+        Looks like this page decided to play hide and seek... and it's winning!
+        The page you're looking for doesn't exist, or maybe it's just really
+        good at hiding.
+      </p>
+      <a href="/" class="button button-primary">Take Me Home</a>
+    </div>
+  </body>
+</html>
