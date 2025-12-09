@@ -26,8 +26,13 @@ dependencies = [
   "uvicorn[standard]==0.38.0",
   "httpx==0.28.1",
   "structlog==25.5.0",
-  "rich==14.2.0"
+  "rich==14.2.0",
+  "pyjwt==2.10.1",
+  "websockets==15.0.1"
 ]
+
+[project.scripts]
+thub = "thub.cli:main"
 
 [project.optional-dependencies]
 dev = [
