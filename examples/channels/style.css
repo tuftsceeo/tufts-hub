@@ -1,0 +1,247 @@
+/* Reset and base styles. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Root variables for theming. */
+:root {
+  --background-colour: #ffffff;
+  --text-colour: #222222;
+  --border-colour: #cccccc;
+  --input-background: #f8f9fa;
+  --button-bg: #1976d2;
+  --button-text: #ffffff;
+  --button-hover: #1565c0;
+  --success-colour: #388e3c;
+  --error-colour: #d32f2f;
+  --message-sent-bg: #e3f2fd;
+  --message-received-bg: #f1f8e9;
+  --section-bg: #fafafa;
+  --padding: 1rem;
+}
+
+/* Dark mode detection. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-colour: #1a1a1a;
+    --text-colour: #e0e0e0;
+    --border-colour: #444444;
+    --input-background: #2a2a2a;
+    --button-bg: #42a5f5;
+    --button-text: #000000;
+    --button-hover: #64b5f6;
+    --success-colour: #66bb6a;
+    --error-colour: #ef5350;
+    --message-sent-bg: #1e3a5f;
+    --message-received-bg: #2d4a2c;
+    --section-bg: #252525;
+  }
+}
+
+/* Base typography and layout. */
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--background-colour);
+  color: var(--text-colour);
+  line-height: 1.6;
+  padding: var(--padding);
+  min-height: 100vh;
+}
+
+/* Main container. */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Typography. */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-colour);
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text-colour);
+}
+
+.intro {
+  margin-bottom: 2rem;
+  color: var(--text-colour);
+  opacity: 0.8;
+}
+
+/* Sections. */
+section {
+  background-color: var(--section-bg);
+  border: 1px solid var(--border-colour);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Input groups. */
+.input-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+input[type="text"],
+textarea {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border-colour);
+  border-radius: 4px;
+  background-color: var(--input-background);
+  color: var(--text-colour);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--button-bg);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Buttons. */
+button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--button-hover);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Status indicator. */
+.status {
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-weight: 500;
+  background-color: var(--input-background);
+  border: 1px solid var(--border-colour);
+}
+
+.status.connected {
+  background-color: var(--success-colour);
+  color: white;
+  border-color: var(--success-colour);
+}
+
+.status.error {
+  background-color: var(--error-colour);
+  color: white;
+  border-color: var(--error-colour);
+}
+
+/* Output section. */
+.output-section {
+  min-height: 400px;
+}
+
+.output {
+  background-color: var(--input-background);
+  border: 1px solid var(--border-colour);
+  border-radius: 4px;
+  padding: 1rem;
+  min-height: 350px;
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Messages. */
+.message {
+  padding: 0.75rem;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.message.sent {
+  background-color: var(--message-sent-bg);
+  align-self: flex-end;
+  text-align: right;
+}
+
+.message.received {
+  background-color: var(--message-received-bg);
+  align-self: flex-start;
+}
+
+.message-text {
+  display: block;
+  white-space: pre-wrap;
+}
+
+/* Responsive breakpoints. */
+@media (max-width: 768px) {
+  :root {
+    --padding: 0.75rem;
+  }
+
+  body {
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --padding: 0.5rem;
+  }
+
+  body {
+    font-size: 0.85rem;
+  }
+
+  section {
+    padding: 1rem;
+  }
+}

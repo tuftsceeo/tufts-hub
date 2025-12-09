@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WebSocket Channels Example</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.2/core.css">
+    <script type="module" src="https://pyscript.net/releases/2025.11.2/core.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main>
+      <h1>WebSocket Channels</h1>
+      <p class="intro">
+        Connect to a channel to send and receive real-time messages.
+        Open this page in multiple tabs or browsers to see messages appear
+        instantly across all connected clients.
+      </p>
+
+      <section class="connection">
+        <h2>Connect to Channel</h2>
+        <div class="input-group">
+          <input
+            type="text"
+            id="channel-input"
+            placeholder="Enter channel name (e.g. 'chat')"
+            autofocus
+          />
+          <button id="connect-button">Connect</button>
+        </div>
+        <div id="status" class="status">Not connected</div>
+      </section>
+
+      <section class="messaging">
+        <h2>Send Message</h2>
+        <div class="input-group">
+          <textarea
+            id="message-input"
+            placeholder="Type your message here..."
+            rows="3"
+            disabled
+          ></textarea>
+          <button id="send-button" disabled>Send</button>
+        </div>
+      </section>
+
+      <section class="output-section">
+        <h2>Messages</h2>
+        <div id="output" class="output"></div>
+      </section>
+    </main>
+
+    <script type="mpy" src="./main.py"></script>
+  </body>
+</html>

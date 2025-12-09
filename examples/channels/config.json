@@ -1,0 +1,13 @@
+{
+  "users": {
+    "test": [
+      "d59203e6247717ce523308eaf1550f4d5047150156c9fb6ea7b5995b64c339e7",
+      "e071af109b92213525667c67f7e20030c526f57568d9fb8153c48fd5293e7de1"
+    ]
+  },
+  "proxies": {},
+  "jwt": {
+    "secret": "0emDBy_XPDngJGOxEd4MLxWIYX9hav2IXubOF4m13Vc",
+    "expiry_hours": 24
+  }
+}

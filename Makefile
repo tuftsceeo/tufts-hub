@@ -9,6 +9,7 @@ clean:
 tidy:
 	black -l 79 src/thub/*.py
 	black -l 79 tests/*.py
+	black -l 79 examples/**/*.py
 
 test:
 	pytest --cov=src/thub --cov-report=term-missing
