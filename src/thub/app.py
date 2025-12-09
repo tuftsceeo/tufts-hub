@@ -29,6 +29,7 @@ from thub.logging import (
     log_shutdown,
     log_startup,
 )
+from thub.proxy import proxy_request
 from thub.websocket import broadcast, connect, disconnect
 
 
@@ -111,6 +112,26 @@ async def login(username: str = Form(...), password: str = Form(...)):
     )
 
     return response
+
+
+@app.api_route(
+    "/proxy/{api_name}/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"],
+)
+async def proxy_endpoint(
+    api_name: str,
+    path: str,
+    request: Request,
+    username: str = Depends(get_current_user),
+):
+    """
+    Proxy requests to configured external APIs.
+
+    Requires authentication and API configuration in config.json.
+    """
+    return await proxy_request(
+        api_name, path, request.method, request, username
+    )
 
 
 @app.get("/{path:path}")

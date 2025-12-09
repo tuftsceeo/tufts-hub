@@ -1,0 +1,18 @@
+{
+  "users": {
+    "test": [
+      "10026602d158dcfe5fa1cfec348510a3481b4f2a966f3ead900fcd5eb8f6c72e",
+      "0b341259165491191ec7d9c432c89a95f8977fe244aa8d22f98042c26816ea16"
+    ]
+  },
+  "proxies": {
+    "pokeapi": {
+      "base_url": "https://pokeapi.co/api/v2",
+      "headers": {}
+    }
+  },
+  "jwt": {
+    "secret": "pZFiQDQOnxE1yIsnSbMCx0Ln0Yk2hh0p1wYl-VkD3Qc",
+    "expiry_hours": 24
+  }
+}

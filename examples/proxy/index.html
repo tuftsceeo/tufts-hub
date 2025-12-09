@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pokémon Proxy Example - Gotta Proxy 'Em All!</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.2/core.css">
+    <script type="module" src="https://pyscript.net/releases/2025.11.2/core.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main>
+      <header class="app-header">
+        <h1>🎮 Pokémon Proxy Explorer</h1>
+        <p class="tagline">Gotta Proxy 'Em All!</p>
+      </header>
+
+      <section class="search-section">
+        <h2>🔍 Find Your Pokémon</h2>
+        <p class="intro">
+          Enter a Pokémon name below and watch the magic happen!
+          The proxy will fetch data from the PokéAPI without exposing
+          any API details to your browser.
+        </p>
+        <div class="search-box">
+          <input
+            type="text"
+            id="pokemon-input"
+            placeholder="Try 'pikachu', 'charizard', or 'mewtwo'..."
+            autofocus
+          />
+          <button id="search-button">Search! ⚡</button>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="log-section">
+          <div class="section-header">
+            <h2>📡 Request Log</h2>
+            <button id="clear-log-button" class="clear-button">Clear 🧹</button>
+          </div>
+          <div id="request-log" class="request-log"></div>
+        </section>
+
+        <section class="card-section">
+          <h2>✨ Pokémon Card</h2>
+          <div id="pokemon-card" class="pokemon-card">
+            <div class="empty-state">
+              <div class="pokeball">⚪</div>
+              <p>Search for a Pokémon to see their card!</p>
+              <p class="hint">🎯 Try starting with the classics!</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script type="mpy" src="./main.py"></script>
+  </body>
+</html>

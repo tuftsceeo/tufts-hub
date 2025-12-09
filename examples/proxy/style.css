@@ -1,0 +1,594 @@
+/* Reset and base styles. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Root variables for playful theming. */
+:root {
+  --background-colour: #f0f8ff;
+  --text-colour: #2c3e50;
+  --border-colour: #bdc3c7;
+  --primary-colour: #3498db;
+  --primary-hover: #2980b9;
+  --success-colour: #27ae60;
+  --error-colour: #e74c3c;
+  --warning-colour: #f39c12;
+  --card-bg: #ffffff;
+  --log-bg: #ecf0f1;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --padding: 1rem;
+}
+
+/* Dark mode - even more playful! */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-colour: #1a1a2e;
+    --text-colour: #eee;
+    --border-colour: #444;
+    --primary-colour: #4a90e2;
+    --primary-hover: #357abd;
+    --success-colour: #2ecc71;
+    --error-colour: #e74c3c;
+    --warning-colour: #f39c12;
+    --card-bg: #16213e;
+    --log-bg: #0f3460;
+    --shadow: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Base typography and layout. */
+body {
+  font-family: 'Comic Sans MS', 'Comic Neue', cursive, sans-serif;
+  background: linear-gradient(135deg, var(--background-colour) 0%, var(--primary-colour) 100%);
+  background-attachment: fixed;
+  color: var(--text-colour);
+  line-height: 1.6;
+  padding: var(--padding);
+  min-height: 100vh;
+}
+
+/* Main container. */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header. */
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 8px 16px var(--shadow);
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  color: var(--primary-colour);
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px var(--shadow);
+}
+
+.tagline {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--text-colour);
+  opacity: 0.8;
+}
+
+/* Search section. */
+.search-section {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+.search-section h2 {
+  margin-bottom: 1rem;
+  color: var(--primary-colour);
+}
+
+.intro {
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.search-box {
+  display: flex;
+  gap: 0.75rem;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid var(--border-colour);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--log-bg);
+  color: var(--text-colour);
+  transition: all 0.3s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-colour);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  transform: translateY(-2px);
+}
+
+button {
+  padding: 1rem 1.5rem;
+  background: var(--primary-colour);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--shadow);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Content grid. */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Sections. */
+section {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+section h2 {
+  margin-bottom: 1rem;
+  color: var(--primary-colour);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  margin-bottom: 0;
+}
+
+.clear-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Request log. */
+.request-log {
+  background: var(--log-bg);
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.log-entry {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.log-timestamp {
+  color: var(--primary-colour);
+  font-weight: bold;
+}
+
+.log-info {
+  color: var(--text-colour);
+}
+
+.log-request {
+  color: var(--primary-colour);
+  font-weight: bold;
+}
+
+.log-success {
+  color: var(--success-colour);
+  font-weight: bold;
+}
+
+.log-error {
+  color: var(--error-colour);
+  font-weight: bold;
+}
+
+.log-warning {
+  color: var(--warning-colour);
+  font-weight: bold;
+}
+
+/* Pokemon card. */
+.pokemon-card {
+  min-height: 500px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-colour);
+  opacity: 0.6;
+}
+
+.pokeball {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.hint {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Pokemon card content. */
+.pokemon-card-content {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.pokemon-id {
+  display: inline-block;
+  background: var(--primary-colour);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.pokemon-name {
+  font-size: 2rem;
+  color: var(--primary-colour);
+  margin: 0.5rem 0;
+}
+
+/* Types. */
+.types-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.type-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  color: white;
+  font-size: 0.9rem;
+}
+
+/* All 18 Pokemon types with good contrast. */
+.type-normal {
+  background: linear-gradient(135deg, #a8a878 0%, #8a8a59 100%);
+}
+
+.type-fire {
+  background: linear-gradient(135deg, #f08030 0%, #dd6610 100%);
+}
+
+.type-water {
+  background: linear-gradient(135deg, #6890f0 0%, #386ceb 100%);
+}
+
+.type-electric {
+  background: linear-gradient(135deg, #f8d030 0%, #dab007 100%);
+  color: #2c3e50;  /* Dark text for better contrast on yellow. */
+}
+
+.type-grass {
+  background: linear-gradient(135deg, #78c850 0%, #5ca935 100%);
+}
+
+.type-ice {
+  background: linear-gradient(135deg, #98d8d8 0%, #69c6c6 100%);
+  color: #2c3e50;  /* Dark text for better contrast on light blue. */
+}
+
+.type-fighting {
+  background: linear-gradient(135deg, #c03028 0%, #9d1f1a 100%);
+}
+
+.type-poison {
+  background: linear-gradient(135deg, #a040a0 0%, #803080 100%);
+}
+
+.type-ground {
+  background: linear-gradient(135deg, #e0c068 0%, #d4a348 100%);
+  color: #2c3e50;  /* Dark text for better contrast. */
+}
+
+.type-flying {
+  background: linear-gradient(135deg, #a890f0 0%, #7e62d8 100%);
+}
+
+.type-psychic {
+  background: linear-gradient(135deg, #f85888 0%, #f61c5d 100%);
+}
+
+.type-bug {
+  background: linear-gradient(135deg, #a8b820 0%, #8d9a1b 100%);
+}
+
+.type-rock {
+  background: linear-gradient(135deg, #b8a038 0%, #998422 100%);
+}
+
+.type-ghost {
+  background: linear-gradient(135deg, #705898 0%, #554374 100%);
+}
+
+.type-dragon {
+  background: linear-gradient(135deg, #7038f8 0%, #4c08ef 100%);
+}
+
+.type-dark {
+  background: linear-gradient(135deg, #705848 0%, #513f34 100%);
+}
+
+.type-steel {
+  background: linear-gradient(135deg, #b8b8d0 0%, #9797ba 100%);
+  color: #2c3e50;  /* Dark text for better contrast. */
+}
+
+.type-fairy {
+  background: linear-gradient(135deg, #ee99ac 0%, #e56e8c 100%);
+}
+
+/* Sprites. */
+.sprites-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sprite-box {
+  text-align: center;
+}
+
+.sprite-box img {
+  width: 120px;
+  height: 120px;
+  image-rendering: pixelated;
+  background: var(--log-bg);
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+
+.sprite-label {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  opacity: 0.7;
+}
+
+/* Cry section. */
+.cry-section {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--log-bg);
+  border-radius: 10px;
+}
+
+.cry-section h3 {
+  margin-bottom: 0.5rem;
+}
+
+audio {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Physical stats. */
+.physical-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.physical-stat {
+  text-align: center;
+  padding: 1rem;
+  background: var(--log-bg);
+  border-radius: 10px;
+}
+
+.physical-label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  opacity: 0.8;
+}
+
+.physical-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-colour);
+}
+
+/* Battle stats. */
+.stats-section {
+  padding: 1rem;
+  background: var(--log-bg);
+  border-radius: 10px;
+}
+
+.stats-section h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.stat-row {
+  margin-bottom: 0.75rem;
+}
+
+.stat-name {
+  font-weight: bold;
+}
+
+.stat-value {
+  color: var(--primary-colour);
+  font-weight: bold;
+}
+
+.stat-bar {
+  height: 8px;
+  background: var(--card-bg);
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--success-colour) 0%, var(--primary-colour) 100%);
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+}
+
+/* Error states. */
+.error-message {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-emoji {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.error-message h2 {
+  color: var(--error-colour);
+  margin-bottom: 1rem;
+}
+
+/* Loading state. */
+.loading-message {
+  text-align: center;
+  padding: 3rem;
+}
+
+.loading-spinner {
+  font-size: 3rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive breakpoints. */
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .sprites-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.9rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .pokemon-name {
+    font-size: 1.5rem;
+  }
+}
