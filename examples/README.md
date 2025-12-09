@@ -1,10 +1,15 @@
 # Tufts Hub Examples
 
-This directory contains example applications demonstrating how to use Tufts Hub features with PyScript.
+This directory contains example applications demonstrating how to use Tufts
+Hub features with PyScript. **DO NOT USE THESE IN PRODUCTION.**
 
 ## WebSocket Channels (`/examples/channels`)
 
-A real-time messaging application that demonstrates WebSocket pub/sub channels.
+A real-time messaging application that demonstrates WebSocket pub/sub
+channels. Log in using these credentials:
+
+* Username: `test`
+* Password: `password123`
 
 ### Features
 
@@ -22,29 +27,25 @@ A real-time messaging application that demonstrates WebSocket pub/sub channels.
    thub serve
    ```
 
-2. Login at `http://localhost:8000/login`
+2. Login at `http://localhost:8000/login`.
 
-3. Navigate to `http://localhost:8000` (or wherever your examples are hosted)
+3. Navigate to `http://localhost:8000` (or wherever your examples are hosted).
 
-4. Enter a channel name (e.g., "chat") and click Connect
+4. Enter a channel name (e.g., "chat") and click Connect.
 
-5. Open the same page in another browser tab or window
+5. Open the same page in another browser tab or window.
 
-6. Type messages and watch them appear instantly across all connected clients
+6. Type messages and watch them appear instantly across all connected clients.
 
 ### Technical Details
 
 The example demonstrates:
 
-- **WebSocket connection**: Using PyScript's `WebSocket` class with automatic cookie authentication
-- **Event handling**: Using `@when` decorator for button clicks and keyboard events
-- **DOM manipulation**: Creating and updating elements dynamically with `pyscript.web`
-- **Real-time updates**: Automatic scrolling and message display
-- **Error handling**: Connection status and error states
-
-### Code Structure
-
-- `main.py` - Python logic for WebSocket connection and message handling
-- `index.html` - HTML structure with semantic markup
-- `style.css` - Responsive CSS with dark/light mode theming
-- `settings.json` - PyScript configuration (empty for this simple example)
+- **WebSocket connection**: Using PyScript's `WebSocket` class with automatic
+  cookie authentication.
+- **Event handling**: Using `@when` decorator for button clicks and keyboard
+  events.
+- **DOM manipulation**: Creating and updating elements dynamically with
+  `pyscript.web`.
+- **Real-time updates**: Automatic scrolling and message display.
+- **Error handling**: Connection status and error states.
