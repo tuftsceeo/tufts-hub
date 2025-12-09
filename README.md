@@ -145,6 +145,16 @@ is authenticated the appropriate session cookie is set and they see details
 of their JWT token (for API connections via PyScript). Otherwise, a username
 and password challenge is always displayed.
 
+### Logout 🫂
+
+```
+GET /logout
+```
+
+If needed, you can logout from the server by visiting this endpoint. Your
+session/cookie will no longer be valid, and further interactions with the
+server will require you to log back in again. 
+
 ### WebSocket Channels 💬
 
 ```
