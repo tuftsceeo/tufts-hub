@@ -170,6 +170,13 @@ def new(args: argparse.Namespace):
     )
     style_css.write_text(css_content, encoding="utf-8")
 
+    # Create .gitignore from template.
+    gitignore = project_path / ".gitignore"
+    gitignore_content = (static_dir / "skeleton_gitignore").read_text(
+        encoding="utf-8"
+    )
+    gitignore.write_text(gitignore_content, encoding="utf-8")
+
     console.print(
         f"[green]Created PyScript project '{args.project_name}' "
         f"with version {version}[/green]"

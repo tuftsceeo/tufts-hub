@@ -297,3 +297,28 @@ def test_new_creates_correct_file_contents(tmp_path, monkeypatch):
     assert '<script type="mpy" src="./main.py"' in html_content
     assert 'config="./settings.json"' in html_content
     assert "terminal" in html_content
+
+
+def test_new_creates_gitignore(tmp_path, monkeypatch):
+    """
+    New project includes .gitignore with security files.
+    """
+    monkeypatch.chdir(tmp_path)
+
+    args = MagicMock()
+    args.project_name = "testproject"
+    args.version = "2025.1.1"
+
+    new(args)
+
+    project_path = tmp_path / "testproject"
+    gitignore_path = project_path / ".gitignore"
+
+    # Check .gitignore exists.
+    assert gitignore_path.exists()
+
+    # Check .gitignore content.
+    gitignore_content = gitignore_path.read_text(encoding="utf-8")
+    assert "config.json" in gitignore_content
+    assert "*.pem" in gitignore_content
+    assert "__pycache__/" in gitignore_content
