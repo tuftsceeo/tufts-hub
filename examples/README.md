@@ -21,19 +21,20 @@ channels. Log in using these credentials:
 
 ### How to Use
 
-1. Start Tufts Hub from your project directory:
+1. Start Tufts Hub from inside the project's directory:
    ```bash
-   cd /path/to/your/project
+   cd example/channels
    thub serve
    ```
 
-2. Login at `http://localhost:8000/login`.
+2. Use your browser to visit `http://localhost:8000/`. Sign in with the
+   `test` / `password123` credentials.
 
-3. Navigate to `http://localhost:8000` (or wherever your examples are hosted).
+3. Once signed in, click the "Continue" button to view the app.
 
 4. Enter a channel name (e.g., "chat") and click Connect.
 
-5. Open the same page in another browser tab or window.
+5. Sign in and open the same page in another browser tab or window.
 
 6. Type messages and watch them appear instantly across all connected clients.
 
@@ -74,7 +75,7 @@ in using these credentials:
 
 ### How to Use
 
-1. Configure the PokéAPI proxy in your `config.json`:
+1. Note the configuration of the PokéAPI proxy in the `config.json`:
    ```json
    {
      "proxies": {
@@ -86,9 +87,14 @@ in using these credentials:
    }
    ```
 
-2. Start Tufts Hub and login.
+2. Start Tufts Hub from inside the project's directory:
+   ```bash
+   cd example/proxy
+   thub serve
+   ```
 
-3. Navigate to `http://localhost:8000/examples/proxy`.
+3. Navigate to `http://localhost:8000/` and sign in / click "Continue", as in the
+   previous example.
 
 4. Enter a Pokémon name (try "pikachu", "charizard", or "mewtwo").
 
