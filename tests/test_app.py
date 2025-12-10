@@ -100,10 +100,10 @@ def test_cors_and_coi_headers_on_static_files(tmp_path, monkeypatch):
     token = create_jwt_token("testuser", config)
 
     client = TestClient(app)
+    client.cookies.set("session", token)
 
     response = client.get(
         "/test.html",
-        cookies={"session": token},
         headers={"Origin": "http://localhost"},
     )
 

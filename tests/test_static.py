@@ -347,8 +347,9 @@ def test_static_files_have_no_cache_headers(tmp_path, monkeypatch):
     token = create_jwt_token("testuser", config)
 
     client = TestClient(app)
+    client.cookies.set("session", token)
 
-    response = client.get("/test.html", cookies={"session": token})
+    response = client.get("/test.html")
 
     assert response.status_code == 200
     # Check for no-cache headers.
@@ -385,9 +386,10 @@ def test_404_page_is_playful(tmp_path, monkeypatch):
     token = create_jwt_token("testuser", config)
 
     client = TestClient(app)
+    client.cookies.set("session", token)
 
     # Try to access a non-existent file.
-    response = client.get("/does-not-exist.html", cookies={"session": token})
+    response = client.get("/does-not-exist.html")
 
     assert response.status_code == 404
     # Check for playful 404 page content.
