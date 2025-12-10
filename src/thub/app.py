@@ -15,7 +15,7 @@ from fastapi import (
     status,
 )
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import HTMLResponse, Response, FileResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from thub.auth import (
@@ -204,9 +204,6 @@ async def serve_static_files(
     Excludes config.json and .pem files for security.
     Serves index.html for directory requests if it exists.
     """
-    from pathlib import Path
-    from fastapi.responses import FileResponse
-
     # Security: block sensitive files.
     if path == "config.json" or path.endswith(".pem"):
         return return_404()
