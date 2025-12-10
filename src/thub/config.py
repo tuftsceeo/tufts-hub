@@ -3,7 +3,6 @@ Configuration management for Tufts Hub.
 """
 
 import json
-import os
 from pathlib import Path
 from typing import Any
 
