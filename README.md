@@ -38,6 +38,90 @@ configuration:
 ⚠️ **DO NOT EDIT USER INFO DIRECTLY**⚠️ - use the command line tool for
 this; only edit the `proxies` section as required.
 
+## Quick start 💨
+
+These steps get you a working local copy fast. You can watch a truncated
+version of these steps [in this video](https://www.youtube.com/watch?v=MvDOQ2B_4MI).
+
+1. Clone this repository from GitHub.
+
+2. In the root directory of this repository, on your computer, create a
+   virtual environment (a sandbox for our work):
+
+```bash
+$ python -m venv venv
+```
+
+3. Activate the virtual environment, so all our work is contained within
+   the safe sandbox:
+
+```bash
+$ source venv/bin/activate
+```
+
+4. Install the **local** version of this project into the virtual environment.
+
+```bash
+$ pip install -e ".[dev]"
+```
+
+5. You're all set. Perhaps try serving the sample apps? They're found in the
+   `/examples` directory of this project. We'll use the `proxy` example here:
+
+```bash
+$ cd examples/proxy
+```
+
+6. Start serving the app from _inside_ its (`/examples/proxy`) directory with
+   the `thub` command (fully described below).
+
+```bash
+$ thub serve
+```
+
+7. Go visit [http://localhost:8000/](http://localhost:8000/) in your browser
+   and use the username `test` and password `password123`
+
+8. Once logged in, click the "Continue" button to view the PyScript app.
+
+9. Back in your console type `CTRL-C` to stop the server.
+
+10. Change to a completely new directory, into which you don't mind creating a
+    new PyScript app. Then use `thub` to create your new app (replacing
+    `my_project` with whatever you want your app to be called):
+
+```bash
+$ thub new my_project
+```
+
+11. Change into the new project's directory:
+
+```bash
+$ cd my_project
+```
+
+12. Add a user for your app, by giving the `thub` command the new user's
+    username and password (you choose):
+
+```bash
+$ thub adduser test password123
+```
+
+13. Change the files in the project to reflect what you want your PyScript
+    project to do. That's up to you! 😊
+
+14. As before, serve your app with the `thub` command.
+
+```bash
+$ thub serve
+```
+
+15. Once again, go visit [http://localhost:8000/](http://localhost:8000)
+    where your *new* app will be served.
+
+16. That's it! Any questions? Read on below. Feedback welcome.
+
+
 ## CLI commands 🖥️
 
 ### Start the server ⚙️
@@ -253,10 +337,13 @@ password is, `test` and `password123`).
 
 ## Developer setup 💐
 
+We expect contributors to abide by the spirit outlined in our 
+`CARE_OF_COMMUNITY.md` file.
+
 Fork the project, clone the repository, create a virtual environment, then:
 
 ```bash
-pip install -e .[dev]
+pip install -e ".[dev]"
 ```
 
 Please read `CONTRIBUTING.md` for more details. Each new contribution should
@@ -276,7 +363,9 @@ a pull request**.
 
 ## Acknowledgements 🙏
 
-Thank you to Anaconda for supporting the open-source work on PyScript.
+Thank you to [Anaconda](https://anaconda.com/) 🐍 for supporting the
+open-source work relating to PyScript.
 
-Thank you to Tufts for their patience and understanding as a band-aid for
-their PyScript hosting problems was created (i.e. this project).
+Thank you to [Tufts CEEO](https://ceeo.tufts.edu/) for their patience,
+collaboration and understanding as a band-aid 🩹 for their PyScript hosting
+problems was built together (i.e. this project).
