@@ -181,24 +181,24 @@ def main():
     Main entry point for the CLI.
     """
     parser = argparse.ArgumentParser(
-        description="Tufts Hub - Self-hosted PyScript infrastructure"
+        description="Tufts Hub - Self-hosted PyScript infrastructure."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Serve command.
     serve_parser = subparsers.add_parser(
-        "serve", help="Start the FastAPI server"
+        "serve", help="Start the FastAPI server."
     )
     serve_parser.add_argument(
         "--host",
         default="127.0.0.1",
-        help="Host to bind to (default: 127.0.0.1)",
+        help="Host to bind to (default: 127.0.0.1).",
     )
     serve_parser.add_argument(
         "--port",
         type=int,
         default=8000,
-        help="Port to bind to (default: 8000)",
+        help="Port to bind to (default: 8000).",
     )
     serve_parser.add_argument(
         "--reload",
@@ -207,21 +207,21 @@ def main():
     )
 
     # Adduser command.
-    adduser_parser = subparsers.add_parser("adduser", help="Add a new user")
-    adduser_parser.add_argument("username", help="Username for the new user")
-    adduser_parser.add_argument("password", help="Password for the new user")
+    adduser_parser = subparsers.add_parser("adduser", help="Add a new user.")
+    adduser_parser.add_argument("username", help="Username for the new user.")
+    adduser_parser.add_argument("password", help="Password for the new user.")
 
     # Deluser command.
-    deluser_parser = subparsers.add_parser("deluser", help="Remove a user")
-    deluser_parser.add_argument("username", help="Username to remove")
+    deluser_parser = subparsers.add_parser("deluser", help="Remove a user.")
+    deluser_parser.add_argument("username", help="Username to remove.")
 
     # New command.
     new_parser = subparsers.add_parser(
-        "new", help="Create a new PyScript project"
+        "new", help="Create a new PyScript project."
     )
-    new_parser.add_argument("project_name", help="Name of the new project")
+    new_parser.add_argument("project_name", help="Name of the new project.")
     new_parser.add_argument(
-        "--version", help="PyScript version to use (default: latest)"
+        "--version", help="PyScript version to use (default: latest)."
     )
 
     # Parse arguments and dispatch.
