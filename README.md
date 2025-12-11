@@ -35,8 +35,10 @@ configuration:
 }
 ```
 
-⚠️ **DO NOT EDIT USER INFO DIRECTLY**⚠️ - use the command line tool for
-this; only edit the `proxies` section as required.
+⚠️ **DO NOT EDIT USER INFO DIRECTLY**⚠️
+
+Use the command line tool for this; only edit the `proxies` section as
+required.
 
 ## Quick start 💨
 
@@ -360,6 +362,12 @@ $ make check
 This cleans the repository of temporary files, tidies the code, and runs the
 complete Pytest based test suite. **Please run this command before submitting
 a pull request**.
+
+Listening to our community is vital. The work in this repository is derived
+from a call between Chris and Ethan at Tufts, and Nicholas and Andrea at
+PyScript. A video of this meeting is embedded below:
+
+[![Tufts / PyScript requirements capture and analysis](https://img.youtube.com/vi/9txRDOtLfK0/0.jpg)](https://www.youtube.com/watch?v=9txRDOtLfK0)
 
 ## Acknowledgements 🙏
 
