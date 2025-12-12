@@ -215,6 +215,32 @@ hit the `https://pyscript.net/version.json` endpoint which serves a string of
 the calver of the current latest version of PyScript. This will be used
 instead.
 
+This default manner of creating a new project references the *online* PyScript
+assets. However, should you want your PyScript app to work completely offline
+or in a self-contained manner you can use the `--offline` flag:
+
+```bash
+thub new my_project --version 2025.11.2 --offline
+```
+
+This will download the offline only version of PyScript, for the referenced
+release. The `thub` command will cache this asset so future uses of this
+flag won't require network access.
+
+You don't need to specify the version with the `--offline` flag:
+
+```bash
+thub new my_project --offline
+```
+
+In this situation, `thub` checks for the latest version of PyScript and
+defaults to that (downloading the offline version of that latest version if
+it doesn't already exist in the cache). If you're not connected to the
+internet `thub` will use the most recent version of PyScript found in its
+cache (and warn you of this). If you don't have anything in the cache, `thub`
+will display an error message explaining you need to connect to the internet
+and fill the cache.
+
 ## Endpoints 📡
 
 The following endpoints are available once the app is started via the `thub`
