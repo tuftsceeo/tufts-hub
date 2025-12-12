@@ -165,6 +165,7 @@ def test_new_creates_project_with_specified_version(
     args = MagicMock()
     args.project_name = "myproject"
     args.version = "2025.1.1"
+    args.offline = False
 
     new(args)
 
@@ -202,6 +203,7 @@ def test_new_fetches_latest_version_when_not_specified(
     args = MagicMock()
     args.project_name = "myproject"
     args.version = None
+    args.offline = False
 
     new(args)
 
@@ -229,6 +231,7 @@ def test_new_uses_default_version_on_fetch_failure(
     args = MagicMock()
     args.project_name = "myproject"
     args.version = None
+    args.offline = False
 
     new(args)
 
@@ -253,6 +256,7 @@ def test_new_does_not_overwrite_existing_directory(tmp_path, monkeypatch):
     args = MagicMock()
     args.project_name = "myproject"
     args.version = "2025.1.1"
+    args.offline = False
 
     new(args)
 
@@ -271,6 +275,7 @@ def test_new_creates_correct_file_contents(tmp_path, monkeypatch):
     args = MagicMock()
     args.project_name = "testproject"
     args.version = "2025.1.1"
+    args.offline = False
 
     new(args)
 
@@ -308,6 +313,7 @@ def test_new_creates_gitignore(tmp_path, monkeypatch):
     args = MagicMock()
     args.project_name = "testproject"
     args.version = "2025.1.1"
+    args.offline = False
 
     new(args)
 
@@ -322,3 +328,180 @@ def test_new_creates_gitignore(tmp_path, monkeypatch):
     assert "config.json" in gitignore_content
     assert "*.pem" in gitignore_content
     assert "__pycache__/" in gitignore_content
+
+
+@patch("thub.cache.download_offline_version")
+@patch("thub.cache.get_cached_version")
+def test_new_offline_with_version(
+    mock_get_cached, mock_download, tmp_path, monkeypatch
+):
+    """
+    New project with --offline flag and specific version.
+    """
+    monkeypatch.chdir(tmp_path)
+
+    # Mock cache functions.
+    mock_pyscript_dir = tmp_path / "cache" / "2025.12.1" / "pyscript"
+    mock_pyscript_dir.mkdir(parents=True)
+    (mock_pyscript_dir / "core.js").write_text("// core.js")
+    (mock_pyscript_dir / "core.css").write_text("/* core.css */")
+
+    mock_get_cached.return_value = None  # Not cached yet.
+    mock_download.return_value = mock_pyscript_dir
+
+    args = MagicMock()
+    args.project_name = "testproject"
+    args.version = "2025.12.1"
+    args.offline = True
+
+    new(args)
+
+    project_path = tmp_path / "testproject"
+
+    # Check project was created.
+    assert project_path.exists()
+
+    # Check pyscript directory was copied.
+    pyscript_dir = project_path / "pyscript"
+    assert pyscript_dir.exists()
+    assert (pyscript_dir / "core.js").exists()
+    assert (pyscript_dir / "core.css").exists()
+
+    # Check HTML uses offline template.
+    html_content = (project_path / "index.html").read_text(encoding="utf-8")
+    assert 'src="./pyscript/core.js"' in html_content
+    assert 'href="./pyscript/core.css"' in html_content
+    assert "offline" in html_content
+
+    # Verify download was called.
+    mock_download.assert_called_once_with("2025.12.1")
+
+
+@patch("thub.cache.get_cached_version")
+def test_new_offline_reuses_cache(mock_get_cached, tmp_path, monkeypatch):
+    """
+    New project with --offline flag reuses cached version.
+    """
+    monkeypatch.chdir(tmp_path)
+
+    # Mock cached version exists.
+    mock_pyscript_dir = tmp_path / "cache" / "2025.12.1" / "pyscript"
+    mock_pyscript_dir.mkdir(parents=True)
+    (mock_pyscript_dir / "core.js").write_text("// core.js")
+    (mock_pyscript_dir / "core.css").write_text("/* core.css */")
+
+    mock_get_cached.return_value = mock_pyscript_dir
+
+    args = MagicMock()
+    args.project_name = "testproject"
+    args.version = "2025.12.1"
+    args.offline = True
+
+    new(args)
+
+    project_path = tmp_path / "testproject"
+
+    # Check pyscript directory was copied from cache.
+    pyscript_dir = project_path / "pyscript"
+    assert pyscript_dir.exists()
+    assert (pyscript_dir / "core.js").exists()
+
+    # Verify cache was checked.
+    mock_get_cached.assert_called_once_with("2025.12.1")
+
+
+@patch("thub.cache.download_offline_version")
+@patch("thub.cache.get_cached_version")
+@patch("thub.cache.get_latest_cached_version")
+def test_new_offline_fallback_to_cached(
+    mock_get_latest, mock_get_cached, mock_download, tmp_path, monkeypatch
+):
+    """
+    New project falls back to latest cached version when download fails.
+    """
+    monkeypatch.chdir(tmp_path)
+
+    # Mock download failure.
+    mock_get_cached.return_value = None
+    mock_download.side_effect = Exception("Network error")
+
+    # Mock latest cached version.
+    mock_pyscript_dir = tmp_path / "cache" / "2024.11.1" / "pyscript"
+    mock_pyscript_dir.mkdir(parents=True)
+    (mock_pyscript_dir / "core.js").write_text("// core.js")
+    (mock_pyscript_dir / "core.css").write_text("/* core.css */")
+
+    mock_get_latest.return_value = mock_pyscript_dir
+
+    args = MagicMock()
+    args.project_name = "testproject"
+    args.version = "2025.12.1"
+    args.offline = True
+
+    new(args)
+
+    project_path = tmp_path / "testproject"
+
+    # Check project was created with cached version.
+    pyscript_dir = project_path / "pyscript"
+    assert pyscript_dir.exists()
+
+    # Verify fallback was used.
+    mock_get_latest.assert_called_once()
+
+
+@patch("thub.cache.download_offline_version")
+@patch("thub.cache.get_cached_version")
+@patch("thub.cache.get_latest_cached_version")
+def test_new_offline_fails_no_cache_no_network(
+    mock_get_latest, mock_get_cached, mock_download, tmp_path, monkeypatch
+):
+    """
+    New project fails gracefully when offline and no cache available.
+    """
+    monkeypatch.chdir(tmp_path)
+
+    # Mock download failure and no cache.
+    mock_get_cached.return_value = None
+    mock_download.side_effect = Exception("Network error")
+    mock_get_latest.return_value = None
+
+    args = MagicMock()
+    args.project_name = "testproject"
+    args.version = "2025.12.1"
+    args.offline = True
+
+    new(args)
+
+    project_path = tmp_path / "testproject"
+
+    # Check project directory was not created (cleaned up).
+    assert not project_path.exists()
+
+
+def test_new_online_mode_unchanged(tmp_path, monkeypatch):
+    """
+    New project without --offline flag behaves as before.
+    """
+    monkeypatch.chdir(tmp_path)
+
+    args = MagicMock()
+    args.project_name = "testproject"
+    args.version = "2025.1.1"
+    args.offline = False
+
+    new(args)
+
+    project_path = tmp_path / "testproject"
+
+    # Check project was created.
+    assert project_path.exists()
+
+    # Check pyscript directory was NOT created.
+    pyscript_dir = project_path / "pyscript"
+    assert not pyscript_dir.exists()
+
+    # Check HTML uses online CDN.
+    html_content = (project_path / "index.html").read_text(encoding="utf-8")
+    assert "pyscript.net" in html_content
+    assert "2025.1.1" in html_content

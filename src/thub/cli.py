@@ -4,7 +4,9 @@ Command line interface for Tufts Hub.
 
 import argparse
 import hashlib
+import os
 import secrets
+import sys
 from pathlib import Path
 
 import httpx
@@ -116,6 +118,13 @@ def new(args: argparse.Namespace):
     """
     Create a new skeleton PyScript project.
     """
+    from thub.cache import (
+        copy_pyscript_to_project,
+        download_offline_version,
+        get_cached_version,
+        get_latest_cached_version,
+    )
+
     # Path to static assets directory.
     static_dir = Path(__file__).parent / "static_assets"
 
@@ -147,6 +156,56 @@ def new(args: argparse.Namespace):
     project_path.mkdir()
     console.print(f"[green]Created directory '{args.project_name}'[/green]")
 
+    # Handle offline mode.
+    if args.offline:
+        console.print(
+            "[cyan]Offline mode: preparing PyScript assets...[/cyan]"
+        )
+
+        # Check if version is cached.
+        pyscript_dir = get_cached_version(version)
+
+        if not pyscript_dir:
+            # Try to download.
+            try:
+                pyscript_dir = download_offline_version(version)
+            except Exception as e:
+                console.print(
+                    f"[red]Failed to download PyScript {version}: {e}[/red]"
+                )
+                console.print(
+                    "[yellow]Attempting to use latest cached version...[/yellow]"
+                )
+
+                # Fall back to latest cached version.
+                pyscript_dir = get_latest_cached_version()
+
+                if not pyscript_dir:
+                    console.print(
+                        "[red]Error: No internet connection and no cached "
+                        "PyScript versions available.[/red]"
+                    )
+                    console.print(
+                        "[yellow]Please connect to the internet to download "
+                        "PyScript offline assets.[/yellow]"
+                    )
+                    # Clean up the created directory.
+                    project_path.rmdir()
+                    return
+
+                # Extract version from path for display.
+                cached_version = pyscript_dir.parent.parent.name
+                console.print(
+                    f"[green]Using cached version {cached_version}[/green]"
+                )
+                version = cached_version
+
+        # Copy pyscript directory to project.
+        copy_pyscript_to_project(pyscript_dir, project_path)
+        console.print(
+            "[green]Copied PyScript assets to project directory[/green]"
+        )
+
     # Create main.py.
     main_py = project_path / "main.py"
     main_py.write_text('print("Hello, World!")\n', encoding="utf-8")
@@ -155,12 +214,20 @@ def new(args: argparse.Namespace):
     settings_json = project_path / "settings.json"
     settings_json.write_text("{}\n", encoding="utf-8")
 
-    # Create index.html from template.
+    # Create index.html from appropriate template.
     index_html = project_path / "index.html"
-    template = (static_dir / "skeleton_index.html").read_text(encoding="utf-8")
-    html_content = template.format(
-        project_name=args.project_name, version=version
-    )
+    if args.offline:
+        template = (static_dir / "skeleton_index_offline.html").read_text(
+            encoding="utf-8"
+        )
+        html_content = template.format(project_name=args.project_name)
+    else:
+        template = (static_dir / "skeleton_index.html").read_text(
+            encoding="utf-8"
+        )
+        html_content = template.format(
+            project_name=args.project_name, version=version
+        )
     index_html.write_text(html_content, encoding="utf-8")
 
     # Create style.css from template.
@@ -210,7 +277,7 @@ def main():
     serve_parser.add_argument(
         "--reload",
         action="store_true",
-        help="Enable auto-reload on file changes",
+        help="Enable auto-reload on file changes.",
     )
 
     # Adduser command.
@@ -229,6 +296,11 @@ def main():
     new_parser.add_argument("project_name", help="Name of the new project.")
     new_parser.add_argument(
         "--version", help="PyScript version to use (default: latest)."
+    )
+    new_parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="Use offline PyScript assets (downloads and caches if needed).",
     )
 
     # Parse arguments and dispatch.
