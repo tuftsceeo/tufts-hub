@@ -120,3 +120,27 @@ This example shows how the proxy feature keeps API details server-side:
 * Cleaner client code (just `/proxy/pokeapi/...`).
 * Request logging for debugging.
 * Consistent authentication handling.
+
+## Programmatic Server Control (`/examples/server`)
+
+Tufts Hub can be controlled programmatically from Python code, allowing
+you to start and stop the server as part of automated workflows, testing,
+or integration scripts.
+
+The three examples in the `/examples/server` directory demonstrate some
+idiomatic use cases, listed in order of increasing sophistication and
+capability:
+
+* `functional.py` - how to start and stop the Tufts Hub server
+  programmatically using the `start_server()` and `stop_server()`
+  functions.
+* `context.py` - starting and stopping the Tufts Hub server using the
+  `run_server()` context manager, which automatically handles cleanup
+  even if errors occur.
+* `realistic.py` - demonstrates a more realistic use case with
+  `run_server()`: starting the server, making HTTP requests to it, then
+  stopping it automatically when finished.
+
+Technical details for the `thub.server` namespace (used to manage the
+running of the server) can be found in the README.md in the root of this
+project's repository. 

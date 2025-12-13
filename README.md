@@ -395,6 +395,52 @@ PyScript. A video of this meeting is embedded below:
 
 [![Tufts / PyScript requirements capture and analysis](https://img.youtube.com/vi/9txRDOtLfK0/0.jpg)](https://www.youtube.com/watch?v=9txRDOtLfK0)
 
+## Programmatic Server Control 🤖
+
+Tufts Hub can be controlled programmatically from Python code via the
+`thub.server` namespace, allowing you to start and stop the server as part
+of automated workflows, testing, or integration scripts:
+
+```python
+from thub.server import start_server, stop_server
+
+# Start server in background
+server = start_server(host="127.0.0.1", port=8000, block=False)
+
+# Do your work...
+
+# Stop server
+stop_server(server)
+```
+
+The `thub.server` module provides three ways to control the server:
+
+* Functional API: `start_server()` and `stop_server()` for explicit control.
+* Context Manager: `run_server()` for automatic cleanup.
+* CLI Mode: `start_server(block=True)` - used by the CLI.
+
+In addition, the module provides a way to automatically find and use SSL
+certificates in your app's directory via the `find_ssl_certificates()`
+function.
+
+Perhaps the most common use case will be through the use of the context
+manager:
+
+```python
+from thub.server import run_server
+
+with run_server(host="127.0.0.1", port=8000) as server:
+    # Server is running here.
+    # `server` is the resulting `subprocess.Popen` object.
+    do_work()
+# Server automatically stopped and cleaned up here.
+```
+
+The source code for the `thub.server` module contains extensive docstrings to
+more fully explain the subtleties of the API. If you're looking for practical
+examples of how to use this module, look in `/examples/server` or read the
+`README.md` contained in the `/examples` directory.
+
 ## Acknowledgements 🙏
 
 Thank you to [Anaconda](https://anaconda.com/) 🐍 for supporting the

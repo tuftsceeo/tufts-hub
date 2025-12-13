@@ -35,45 +35,19 @@ def serve(args: argparse.Namespace):
     """
     Start the FastAPI server from the current directory.
     """
-    # Check for SSL certificates if host is specified.
-    ssl_keyfile = None
-    ssl_certfile = None
+    from thub.server import find_ssl_certificates, start_server
 
-    if args.host:
-        # Look for any .pem files in current directory.
-        pem_files = list(Path.cwd().glob("*.pem"))
-        if pem_files:
-            # Try to identify key and cert files.
-            for pem in pem_files:
-                if "key" in pem.name.lower():
-                    ssl_keyfile = str(pem)
-                else:
-                    ssl_certfile = str(pem)
+    # Look for SSL certificates.
+    ssl_keyfile, ssl_certfile = find_ssl_certificates()
 
-        if ssl_keyfile and ssl_certfile:
-            console.print(
-                f"[green]Starting with SSL using {ssl_certfile} "
-                f"and {ssl_keyfile}[/green]"
-            )
-
-    console.print(
-        f"[blue]Starting Tufts Hub on {args.host}:{args.port}[/blue]"
-    )
-
-    # Configure uvicorn logging to use structlog.
-    log_config = uvicorn.config.LOGGING_CONFIG
-    log_config["formatters"]["default"]["fmt"] = "%(message)s"
-    log_config["formatters"]["access"]["fmt"] = "%(message)s"
-
-    uvicorn.run(
-        "thub.app:app",
+    # Start server (blocking mode for CLI).
+    start_server(
         host=args.host,
         port=args.port,
         reload=args.reload,
         ssl_keyfile=ssl_keyfile,
         ssl_certfile=ssl_certfile,
-        log_config=log_config,
-        access_log=False,
+        block=True,
     )
 
 
@@ -300,7 +274,7 @@ def main():
     new_parser.add_argument(
         "--offline",
         action="store_true",
-        help="Use offline PyScript assets (downloads and caches if needed).",
+        help="Use offline PyScript assets (downloads and caches if needed)",
     )
 
     # Parse arguments and dispatch.
