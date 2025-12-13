@@ -346,12 +346,14 @@ They are:
   pub/sub channels.
 * `proxy` - a playful Pokémon card viewer that demonstrates API proxy
   functionality.
+* `server` - code demonstrating how to programmatically drive the Tufts Hub
+  server.
 
 Please see the `README.md` file in the `/examples` directory for more
 information.
 
 To try these examples on your local machine, follow our developer setup
-instructions (see below) and then, in one of the examples directories, start
+instructions (see below). To run the `channels` and `proxy` examples, start
 serving the PyScript app like this:
 
 ```bash
@@ -362,6 +364,9 @@ Visit [http://localhost:8000/](http://localhost:8000) to see the app. The
 credentials you should use for logging in are listed in the afore mentioned
 `README.md` in the `/examples` directory (hint: the default username and
 password is, `test` and `password123`).
+
+Alternatively, simply run the scripts in the `server` directory to see them
+working.
 
 ## Developer setup 💐
 
