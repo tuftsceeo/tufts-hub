@@ -4,13 +4,10 @@ Command line interface for Tufts Hub.
 
 import argparse
 import hashlib
-import os
 import secrets
-import sys
 from pathlib import Path
 
 import httpx
-import uvicorn
 from rich.console import Console
 
 from thub.config import load_config, save_config

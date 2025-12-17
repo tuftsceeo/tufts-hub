@@ -10,7 +10,6 @@ from typing import Any, Optional
 
 import jwt
 from fastapi import Cookie, Depends, HTTPException, Request, status
-from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from thub.config import load_config, save_config

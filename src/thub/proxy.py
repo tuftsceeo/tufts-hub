@@ -2,8 +2,6 @@
 API proxy functionality for Tufts Hub.
 """
 
-from typing import Any, Dict, Optional
-
 import httpx
 from fastapi import Request, Response
 
