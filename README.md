@@ -400,6 +400,13 @@ PyScript. A video of this meeting is embedded below:
 
 [![Tufts / PyScript requirements capture and analysis](https://img.youtube.com/vi/9txRDOtLfK0/0.jpg)](https://www.youtube.com/watch?v=9txRDOtLfK0)
 
+We had a follow up retrospective / feedback / next steps call two weeks later
+(after Chris and Ethan had a week to play with what we'd built):
+
+[![Tufts / PyScript retrospective and next steps](https://img.youtube.com/vi/voQu2G-oztE/0.jpg)](https://www.youtube.com/watch?v=voQu2G-oztE)
+
+More calls and practitioner feedback coming soon (and they'll be linked here).
+
 ## Programmatic Server Control 🤖
 
 Tufts Hub can be controlled programmatically from Python code via the
