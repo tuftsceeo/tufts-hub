@@ -51,7 +51,7 @@ def find_ssl_certificates(
 
 
 def start_server(
-    host: str = "127.0.0.1",
+    host: str = "0.0.0.0",
     port: int = 8000,
     reload: bool = False,
     ssl_keyfile: Optional[str] = None,
@@ -64,7 +64,7 @@ def start_server(
     Validates that config.json exists before starting.
 
     Parameters:
-        host: Host to bind to (default: 127.0.0.1)
+        host: Host to bind to (default: 0.0.0.0)
         port: Port to bind to (default: 8000)
         reload: Enable auto-reload on file changes (default: False)
         ssl_keyfile: Path to SSL key file (optional)
